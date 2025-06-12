@@ -5,9 +5,13 @@ Professional portfolio showcasing 4+ years of experience in strategic intelligen
 🛠️ **Technical Stack**
 
 Frontend: HTML5, CSS3, JavaScript (ES6+)
+
 Visualisations: Chart.js, Three.js
+
 Animations: AOS (Animate On Scroll)
+
 Icons: Font Awesome
+
 Deployment: GitHub Pages
 
 📁 Repository Structure
@@ -50,13 +54,18 @@ Visit the live portfolio: https://cynthiaugwu.github.io
 **Professional Sections**
 
 Hero Dashboard: Executive summary with key metrics
+
 Experience Timeline: Career progression with detailed achievements
+
 Case Studies: 6 comprehensive project showcases
+
 Methodology: Detailed analytical frameworks
+
 Contact Integration: Professional networking and communication
 
 **📝 Content Guidelines
 Case Studies**
+
 All case studies follow these principles:
 
 Sanitised Data: No classified or sensitive client information
