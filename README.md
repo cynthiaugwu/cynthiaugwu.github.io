@@ -15,7 +15,8 @@ Icons: Font Awesome
 Deployment: GitHub Pages
 
 📁 Repository Structure
-├── index.html                 # Main portfolio page
+├── index.html     # Main portfolio page
+
 ├── case-studies/
 │   ├── supply-chain-risk.html
 │   ├── threat-dashboard.html
@@ -23,6 +24,7 @@ Deployment: GitHub Pages
 │   ├── election-security.html
 │   ├── regional-analysis.html
 │   └── academic-research.html
+
 ├── assets/
 │   ├── css/
 │   │   └── styles.css
@@ -38,6 +40,7 @@ Deployment: GitHub Pages
 │       ├── projects.json
 │       ├── experience.json
 │       └── skills.json
+
 ├── methodology/
 │   ├── osint-framework.html
 │   ├── risk-assessment.html
@@ -69,8 +72,11 @@ Case Studies**
 All case studies follow these principles:
 
 Sanitised Data: No classified or sensitive client information
+
 Methodology Focus: Emphasis on analytical frameworks and processes
+
 Quantified Results: Measurable outcomes and improvements
+
 Professional Standards: Adherence to intelligence community best practices
 
 **🤝 Contact & Networking**
