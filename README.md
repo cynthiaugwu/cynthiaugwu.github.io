@@ -1,4 +1,5 @@
 **Overview**
+
 Professional portfolio showcasing 4+ years of experience in strategic intelligence analysis, geopolitical risk assessment, and threat intelligence. This interactive website demonstrates expertise in OSINT investigations, compliance frameworks, and automated intelligence collection.
 
 🛠️ **Technical Stack**
