@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Threat Dashboard | Case Study</title>
+    <meta name="description" content="Interactive geopolitical intelligence dashboard providing real-time threat monitoring and risk assessment capabilities.">
+    
+    <!-- External Libraries -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e293b;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .back-btn {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .hero-section {
+            padding: 8rem 0 4rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+        }
+
+        .hero-content {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-preview {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .dashboard-title {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.green { background: var(--success-color); }
+        .status-dot.yellow { background: var(--warning-color); }
+        .status-dot.red { background: var(--danger-color); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .widget {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .widget:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .widget-title {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .widget-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .widget-change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .positive { color: var(--success-color); }
+        .negative { color: var(--danger-color); }
+        .neutral { color: var(--warning-color); }
+
+        .threat-map {
+            grid-column: span 2;
+            height: 300px;
+            position: relative;
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .threat-map canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .alert-feed {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.25rem;
+            transition: background 0.3s ease;
+        }
+
+        .alert-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .alert-severity {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .alert-severity.high { background: var(--danger-color); }
+        .alert-severity.medium { background: var(--warning-color); }
+        .alert-severity.low { background: var(--success-color); }
+
+        .alert-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .alert-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .content-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+        }
+
+        .content-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .feature-list li i {
+            color: var(--success-color);
+            width: 16px;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .tech-tag {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-color);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .chart-container {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .chart-title {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .impact-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .threat-map {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">Cynthia Ugwu</div>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                </ul>
+                <a href="../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Portfolio
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content" data-aos="fade-up">
+                <h1>Real-Time Threat Intelligence Dashboard</h1>
+                <p class="subtitle">Interactive Geopolitical Risk Monitoring & Crisis Management Platform</p>
+            </div>
+
+            <div class="dashboard-preview" data-aos="fade-up" data-aos-delay="200">
+                <div class="dashboard-header">
+                    <div class="dashboard-title">
+                        <i class="fas fa-tachometer-alt"></i> GeoPolitical Intelligence Hub
+                    </div>
+                    <div class="status-indicators">
+                        <div class="status-dot green" title="Data Feed Active"></div>
+                        <div class="status-dot yellow" title="Threat Level"></div>
+                        <div class="status-dot red" title="Priority Alert"></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="widget">
+                        <div class="widget-header">
+                            <div class="widget-title">Active Threats</div>
+                            <i class="fas fa-exclamation-triangle" style="color: var(--warning-color);"></i>
+                        </div>
+                        <div class="widget-value">57</div>
+                        <div class="widget-change positive">
+                            <i class="fas fa-arrow-down"></i> -12% from yesterday
+                        </div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-header">
+                            <div class="widget-title">Risk Level</div>
+                            <i class="fas fa-shield-alt" style="color: var(--warning-color);"></i>
+                        </div>
+                        <div class="widget-value" style="color: var(--warning-color);">MODERATE</div>
+                        <div class="widget-change neutral">
+                            <i class="fas fa-minus"></i> No change (6h)
+                        </div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-header">
+                            <div class="widget-title">Regions Monitored</div>
+                            <i class="fas fa-globe" style="color: var(--success-color);"></i>
+                        </div>
+                        <div class="widget-value">4</div>
+                        <div class="widget-change positive">
+                            <i class="fas fa-arrow-up"></i> +1 this week
+                        </div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-header">
+                            <div class="widget-title">Data Sources</div>
+                            <i class="fas fa-database" style="color: var(--accent-color);"></i>
+                        </div>
+                        <div class="widget-value">30+</div>
+                        <div class="widget-change positive">
+                            <i class="fas fa-check"></i> All active
+                        </div>
+                    </div>
+
+                    <div class="threat-map">
+                        <canvas id="threatMapCanvas"></canvas>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-header">
+                            <div class="widget-title">Live Alert Feed</div>
+                            <i class="fas fa-bell" style="color: var(--danger-color);"></i>
+                        </div>
+                        <div class="alert-feed">
+                            <div class="alert-item">
+                                <div class="alert-severity high"></div>
+                                <div class="alert-text">Cyber attack detected - Financial sector</div>
+                                <div class="alert-time">2m ago</div>
+                            </div>
+                            <div class="alert-item">
+                                <div class="alert-severity medium"></div>
+                                <div class="alert-text">Political unrest escalating - MENA region</div>
+                                <div class="alert-time">15m ago</div>
+                            </div>
+                            <div class="alert-item">
+                                <div class="alert-severity low"></div>
+                                <div class="alert-text">Supply chain disruption - Europe</div>
+                                <div class="alert-time">1h ago</div>
+                            </div>
+                            <div class="alert-item">
+                                <div class="alert-severity high"></div>
+                                <div class="alert-text">Infrastructure targeting identified</div>
+                                <div class="alert-time">2h ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Project Overview</h2>
+            <p data-aos="fade-up" style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 3rem;">
+                Developed 25+ custom interactive dashboards providing real-time geopolitical insights and security intelligence for global clients. The platform integrates multiple intelligence sources, automated threat detection, and predictive analytics to enable proactive risk mitigation across diverse operational environments.
+            </p>
+
+            <div class="content-grid">
+                <div class="content-card" data-aos="fade-right">
+                    <h3><i class="fas fa-target"></i> Objectives</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Real-time threat visibility across 4+ regions</li>
+                        <li><i class="fas fa-check"></i> Automated alert prioritisation and escalation</li>
+                        <li><i class="fas fa-check"></i> Integration of 30+ intelligence sources</li>
+                        <li><i class="fas fa-check"></i> Interactive risk visualisation and mapping</li>
+                        <li><i class="fas fa-check"></i> Predictive analytics for threat forecasting</li>
+                        <li><i class="fas fa-check"></i> Mobile-responsive crisis management interface</li>
+                    </ul>
+                </div>
+
+                <div class="content-card" data-aos="fade-left">
+                    <h3><i class="fas fa-cogs"></i> Key Features</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Dynamic threat level assessment algorithms</li>
+                        <li><i class="fas fa-check"></i> Geospatial intelligence visualisation</li>
+                        <li><i class="fas fa-check"></i> Multi-source data fusion and correlation</li>
+                        <li><i class="fas fa-check"></i> Automated incident reporting workflows</li>
+                        <li><i class="fas fa-check"></i> Historical trend analysis and pattern recognition</li>
+                        <li><i class="fas fa-check"></i> Customizable client-specific risk parameters</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Technical Architecture</h2>
+            
+            <div class="tech-stack">
+                <span class="tech-tag">React.js</span>
+                <span class="tech-tag">D3.js</span>
+                <span class="tech-tag">WebSocket API</span>
+                <span class="tech-tag">Node.js</span>
+                <span class="tech-tag">PostgreSQL</span>
+                <span class="tech-tag">Power BI</span>
+                <span class="tech-tag">Python</span>
+            </div>
+
+                <div class="content-card" data-aos="fade-left">
+                    <h3><i class="fas fa-database"></i> Data Sources Integration</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Comprehensive intelligence collection from diverse sources:</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> <strong>News Feeds:</strong> Reuters, Bloomberg, AP, regional outlets</li>
+                        <li><i class="fas fa-check"></i> <strong>Social Media:</strong> Twitter, Facebook Graph, Instagram, Telegram</li>
+                        <li><i class="fas fa-check"></i> <strong>Commercial:</strong> Risk databases, economic indicators</li>
+                        <li><i class="fas fa-check"></i> <strong>Academic:</strong> Research publications, think tank reports</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="chart-container" data-aos="fade-up">
+                <h3 class="chart-title">Data Processing Pipeline Performance</h3>
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Implementation Results</h2>
+            
+            <div class="impact-stats">
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    <div class="stat-number">65%</div>
+                    <div class="stat-label">Response Time Improvement</div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon"><i class="fas fa-eye"></i></div>
+                    <div class="stat-number">25+</div>
+                    <div class="stat-label">Custom Dashboards Deployed</div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-icon"><i class="fas fa-globe"></i></div>
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Regions Under Monitoring</div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">Daily Intelligence Events</div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card" data-aos="fade-right">
+                    <h3><i class="fas fa-trophy"></i> Key Achievements</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> <strong>70.9% Uptime:</strong> Mission-critical reliability for 24/7 operations</li>
+                        <li><i class="fas fa-check"></i> <strong>Sub-second Latency:</strong> Real-time data processing and visualisation</li>
+                        <li><i class="fas fa-check"></i> <strong>75% Alert Accuracy:</strong> Significant reduction in false positives</li>
+                        <li><i class="fas fa-check"></i> <strong>Client Expansion:</strong> 8 additional dashboard deployments</li>
+                    </ul>
+                </div>
+
+                <div class="content-card" data-aos="fade-left">
+                    <h3><i class="fas fa-users"></i> Client Impact</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> <strong>Crisis Management:</strong> 40% faster incident response times</li>
+                        <li><i class="fas fa-check"></i> <strong>Decision Support:</strong> Enhanced situational awareness for C-suite</li>
+                        <li><i class="fas fa-check"></i> <strong>Risk Mitigation:</strong> Proactive threat identification and prevention</li>
+                        <li><i class="fas fa-check"></i> <strong>Operational Efficiency:</strong> Streamlined intelligence workflows</li>
+                        <li><i class="fas fa-check"></i> <strong>Cost Reduction:</strong> 30% decrease in manual monitoring overhead</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="background: rgba(30, 41, 59, 0.3); border-radius: 1rem; padding: 3rem; margin: 3rem 0;">
+        <div class="container">
+            <div style="text-align: center;">
+                <h2 class="section-title" data-aos="fade-up">Project Impact Summary</h2>
+                <p data-aos="fade-up" style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem;">
+                    This real-time threat intelligence platform transformed how organisations monitor and respond to geopolitical risks, enabling proactive decision-making through advanced data visualisation and automated alert systems.
+                </p>
+                <div data-aos="fade-up" style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                    <a href="../index.html#projects" class="back-btn">View More Projects</a>
+                    <a href="../index.html#contact" class="back-btn" style="background: transparent; border: 2px solid var(--accent-color);">Discuss This Project</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // Threat Map Visualisation
+        function initThreatMap() {
+            const canvas = document.getElementById('threatMapCanvas');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            
+            renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+            renderer.setClearColor(0x000000, 0);
+
+            // Create globe representation
+            const geometry = new THREE.SphereGeometry(2, 32, 32);
+            const material = new THREE.MeshBasicMaterial({ 
+                color: 0x1e293b, 
+                wireframe: true,
+                opacity: 0.3,
+                transparent: true
+            });
+            const globe = new THREE.Mesh(geometry, material);
+            scene.add(globe);
+
+            // Add threat indicators
+            const threatGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+            const highThreatMaterial = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+            const mediumThreatMaterial = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+            const lowThreatMaterial = new THREE.MeshBasicMaterial({ color: 0x10b981 });
+
+            // Add random threat points
+            for (let i = 0; i < 50; i++) {
+                const phi = Math.acos(-1 + (2 * i) / 50);
+                const theta = Math.sqrt(50 * Math.PI) * phi;
+                
+                const x = 2.1 * Math.cos(theta) * Math.sin(phi);
+                const y = 2.1 * Math.sin(theta) * Math.sin(phi);
+                const z = 2.1 * Math.cos(phi);
+
+                let material;
+                const threatLevel = Math.random();
+                if (threatLevel > 0.7) material = highThreatMaterial;
+                else if (threatLevel > 0.4) material = mediumThreatMaterial;
+                else material = lowThreatMaterial;
+
+                const threat = new THREE.Mesh(threatGeometry, material);
+                threat.position.set(x, y, z);
+                scene.add(threat);
+            }
+
+            camera.position.z = 5;
+
+            function animate() {
+                requestAnimationFrame(animate);
+                globe.rotation.y += 0.005;
+                renderer.render(scene, camera);
+            }
+
+            animate();
+        }
+
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            initThreatMap();
+
+            // Performance Chart
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(performanceCtx, {
+                type: 'line',
+                data: {
+                    labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                    datasets: [{
+                        label: 'Events Processed (hundreds)',
+                        data: [12, 8, 15, 25, 30, 28, 18],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'Processing Latency (ms)',
+                        data: [250, 180, 220, 300, 350, 320, 280],
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        yAxisID: 'y1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            ticks: { color: '#cbd5e1' },
+                            grid: { color: 'rgba(203, 213, 225, 0.1)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            ticks: { color: '#cbd5e1' }
+                        },
+                        x: {
+                            ticks: { color: '#cbd5e1' },
+                            grid: { color: 'rgba(203, 213, 225, 0.1)' }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: '#cbd5e1' }
+                        }
+                    }
+                }
+            });
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
