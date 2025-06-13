@@ -1,55 +1,39 @@
-**Overview**
+Strategic Intelligence Analyst Portfolio
 
-Professional portfolio showcasing 4+ years of experience in strategic intelligence analysis, geopolitical risk assessment, and threat intelligence. This interactive website demonstrates expertise in OSINT investigations, compliance frameworks, and automated intelligence collection.
+📊 Overview
 
-🛠️ **Technical Stack**
+Professional portfolio showcasing 4+ years of experience in strategic intelligence analysis, geopolitical risk assessment, and threat intelligence. This interactive website demonstrates expertise in OSINT investigations, compliance frameworks, and automated intelligence collection across MENA, Sahel, and European regions.
+
+🛠️ Technical Stack
 
 Frontend: HTML5, CSS3, JavaScript (ES6+)
 
-Visualisations: Chart.js, Three.js
+Visualisations: Chart.js, Three.js for interactive data displays
 
-Animations: AOS (Animate On Scroll)
+Animations: AOS (Animate On Scroll) for smooth user experience
 
-Icons: Font Awesome
+Icons: Font Awesome for professional iconography
 
-Deployment: GitHub Pages
+Forms: Formspree integration for contact functionality
+
+Deployment: GitHub Pages with custom domain support
 
 📁 Repository Structure
-├── index.html     # Main portfolio page
-
+├── index.html                     # Main portfolio homepage
 ├── case-studies/
-│   ├── supply-chain-risk.html
-│   ├── threat-dashboard.html
-│   ├── due-diligence.html
-│   ├── election-security.html
-│   ├── regional-analysis.html
-│   └── academic-research.html
-
-├── assets/
-│   ├── css/
-│   │   └── styles.css
-│   ├── js/
-│   │   ├── main.js
-│   │   ├── charts.js
-│   │   └── animations.js
-│   ├── images/
-│   │   ├── hero-bg.jpg
-│   │   ├── case-studies/
-│   │   └── icons/
-│   └── data/
-│       ├── projects.json
-│       ├── experience.json
-│       └── skills.json
+│   ├── supply-chain-risk.html     # Supply chain automation project
+│   ├── threat-dashboard.html      # Real-time intelligence platform
+│   ├── regional-analysis.html     # MENA/Sahel security analysis
 
 ├── methodology/
-│   ├── osint-framework.html
-│   ├── risk-assessment.html
-│   └── compliance-protocols.html
-├── docs/
-│   ├── cv.pdf
-│   ├── certifications/
-│   └── publications/
-└── README.md
+│   └── osint-framework.html       # Technical methodology showcase
+
+├── assets/
+│   ├── images/                    # Professional photos & screenshots
+│   ├── data/
+│   │   └── projects.json          # Structured project data
+│   └── docs/                      # CV and certifications
+└── README.md                      # This documentation
 
 🚀 Live Demo
 Visit the live portfolio: https://cynthiaugwu.github.io
@@ -60,14 +44,23 @@ Hero Dashboard: Executive summary with key metrics
 
 Experience Timeline: Career progression with detailed achievements
 
-Case Studies: 6 comprehensive project showcases
+Case Studies: 4 comprehensive project showcases
 
-Methodology: Detailed analytical frameworks
+Methodology: Detailed OSINT frameworks
 
 Contact Integration: Professional networking and communication
 
-**📝 Content Guidelines
-Case Studies**
+🎯 Key Portfolio Metrics
+
+4+ Years strategic intelligence experience
+
+30+ Daily risk assessment updates produced per client
+
+35% Average risk reduction achieved for clients
+
+Zero Incidents of classified information security breaches
+
+📝 Content Guidelines
 
 All case studies follow these principles:
 
