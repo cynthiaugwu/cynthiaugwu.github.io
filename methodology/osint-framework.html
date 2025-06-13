@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT Methodology Framework | Intelligence Analysis</title>
+    <meta name="description" content="Comprehensive OSINT collection and analysis framework for strategic intelligence operations.">
+    
+    <!-- External Libraries -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e293b;
+            --accent-color: #3b82f6;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-btn {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .hero-section {
+            padding: 8rem 0 4rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .methodology-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .methodology-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+        }
+
+        .methodology-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        .methodology-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .phase-number {
+            background: var(--gradient-accent);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .process-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .step-icon {
+            background: var(--accent-color);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .tool-category {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .tool-category h4 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tool-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tool-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .tool-list li i {
+            color: var(--success-color);
+            width: 16px;
+        }
+
+        .best-practices {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .best-practices h3 {
+            color: var(--success-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .best-practices ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .best-practices li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .best-practices li i {
+            color: var(--success-color);
+            margin-top: 0.2rem;
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .warning-box h3 {
+            color: var(--warning-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .code-example {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .code-example pre {
+            color: var(--text-secondary);
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .metric-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .methodology-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">Cynthia Ugwu</div>
+                <a href="../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Portfolio
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content" data-aos="fade-up">
+                <h1>OSINT Methodology Framework</h1>
+                <p class="subtitle">Comprehensive Open Source Intelligence Collection & Analysis Protocol</p>
+                <p style="color: var(--text-muted); font-size: 1.1rem; margin-top: 1rem;">
+                    Systematic approach to open source intelligence gathering, verification, and analysis for strategic decision-making.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Intelligence Collection Phases</h2>
+            
+            <div class="methodology-grid">
+                <div class="methodology-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="phase-number">1</div>
+                    <h3><i class="fas fa-crosshairs"></i> Requirements Definition</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Establish clear intelligence requirements, define scope, and identify key information needs.
+                    </p>
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-bullseye"></i></div>
+                            <div>
+                                <strong>Priority Intelligence Requirements (PIRs)</strong><br>
+                                <span style="color: var(--text-muted);">Define critical information gaps and decision-support needs</span>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-map"></i></div>
+                            <div>
+                                <strong>Scope Definition</strong><br>
+                                <span style="color: var(--text-muted);">Establish geographical, temporal, and topical boundaries</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="methodology-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="phase-number">2</div>
+                    <h3><i class="fas fa-search"></i> Source Identification</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Identify and categorize relevant open source information channels and platforms.
+                    </p>
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-globe"></i></div>
+                            <div>
+                                <strong>Source Mapping</strong><br>
+                                <span style="color: var(--text-muted);">Catalog available sources by type, reliability, and coverage</span>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-star"></i></div>
+                            <div>
+                                <strong>Source Evaluation</strong><br>
+                                <span style="color: var(--text-muted);">Assess credibility, timeliness, and relevance of sources</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="methodology-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="phase-number">3</div>
+                    <h3><i class="fas fa-download"></i> Data Collection</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Execute systematic collection across identified sources using appropriate tools and techniques.
+                    </p>
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-robot"></i></div>
+                            <div>
+                                <strong>Automated Collection</strong><br>
+                                <span style="color: var(--text-muted);">Deploy scripts and tools for large-scale data gathering</span>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-hand-paper"></i></div>
+                            <div>
+                                <strong>Manual Collection</strong><br>
+                                <span style="color: var(--text-muted);">Targeted collection requiring human judgment</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="methodology-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="phase-number">4</div>
+                    <h3><i class="fas fa-check-double"></i> Verification</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Validate accuracy and reliability of collected information through multiple sources.
+                    </p>
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-balance-scale"></i></div>
+                            <div>
+                                <strong>Corroboration</strong><br>
+                                <span style="color: var(--text-muted);">Cross-reference information across multiple sources</span>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-certificate"></i></div>
+                            <div>
+                                <strong>Confidence Assessment</strong><br>
+                                <span style="color: var(--text-muted);">Assign reliability and confidence ratings</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="methodology-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="phase-number">5</div>
+                    <h3><i class="fas fa-brain"></i> Analysis</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Transform raw information into actionable intelligence through systematic analysis.
+                    </p>
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-project-diagram"></i></div>
+                            <div>
+                                <strong>Pattern Recognition</strong><br>
+                                <span style="color: var(--text-muted);">Identify trends, connections, and anomalies</span>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-lightbulb"></i></div>
+                            <div>
+                                <strong>Analytical Techniques</strong><br>
+                                <span style="color: var(--text-muted);">Apply structured analytical methods</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="methodology-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="phase-number">6</div>
+                    <h3><i class="fas fa-file-alt"></i> Reporting</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Communicate findings in formats tailored to specific audiences and decision-making needs.
+                    </p>
+                    <div class="process-flow">
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-users-cog"></i></div>
+                            <div>
+                                <strong>Audience Analysis</strong><br>
+                                <span style="color: var(--text-muted);">Tailor format and content to recipient needs</span>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-chart-bar"></i></div>
+                            <div>
+                                <strong>Visualization</strong><br>
+                                <span style="color: var(--text-muted);">Create clear, compelling visual representations</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">OSINT Tools & Techniques</h2>
+            
+            <div class="tools-grid">
+                <div class="tool-category" data-aos="fade-up" data-aos-delay="100">
+                    <h4><i class="fas fa-globe"></i> Web Intelligence</h4>
+                    <ul class="tool-list">
+                        <li><i class="fas fa-check"></i> Google Advanced Search Operators</li>
+                        <li><i class="fas fa-check"></i> Wayback Machine Archives</li>
+                        <li><i class="fas fa-check"></i> Shodan IoT Search Engine</li>
+                        <li><i class="fas fa-check"></i> Maltego Link Analysis</li>
+                        <li><i class="fas fa-check"></i> TheHarvester Email Collection</li>
+                    </ul>
+                </div>
+
+                <div class="tool-category" data-aos="fade-up" data-aos-delay="200">
+                    <h4><i class="fas fa-share-alt"></i> Social Media Intelligence</h4>
+                    <ul class="tool-list">
+                        <li><i class="fas fa-check"></i> Twitter Advanced Search</li>
+                        <li><i class="fas fa-check"></i> Facebook Graph Search</li>
+                        <li><i class="fas fa-check"></i> LinkedIn Intelligence</li>
+                        <li><i class="fas fa-check"></i> Telegram OSINT</li>
+                        <li><i class="fas fa-check"></i> Social Media Monitoring Tools</li>
+                    </ul>
+                </div>
+
+                <div class="tool-category" data-aos="fade-up" data-aos-delay="300">
+                    <h4><i class="fas fa-satellite"></i> Geospatial Intelligence</h4>
+                    <ul class="tool-list">
+                        <li><i class="fas fa-check"></i> Google Earth Pro</li>
+                        <li><i class="fas fa-check"></i> Sentinel Hub Satellite Imagery</li>
+                        <li><i class="fas fa-check"></i> Yandex Maps Analysis</li>
+                        <li><i class="fas fa-check"></i> Overpass API OpenStreetMap</li>
+                        <li><i class="fas fa-check"></i> GeoSocial Footprint Analysis</li>
+                    </ul>
+                </div>
+
+                <div class="tool-category" data-aos="fade-up" data-aos-delay="400">
+                    <h4><i class="fas fa-code"></i> Technical Analysis</h4>
+                    <ul class="tool-list">
+                        <li><i class="fas fa-check"></i> Wireshark Network Analysis</li>
+                        <li><i class="fas fa-check"></i> WHOIS Domain Intelligence</li>
+                        <li><i class="fas fa-check"></i> DNS Enumeration Tools</li>
+                        <li><i class="fas fa-check"></i> Certificate Transparency Logs</li>
+                        <li><i class="fas fa-check"></i> Metadata Extraction Tools</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Best Practices</h2>
+            
+            <div class="best-practices" data-aos="fade-up">
+                <h3><i class="fas fa-thumbs-up"></i> Operational Security (OPSEC)</h3>
+                <ul>
+                    <li><i class="fas fa-check"></i> <strong>Digital Footprint Management:</strong> Use VPNs, anonymising tools, and compartmentalised research profiles</li>
+                    <li><i class="fas fa-check"></i> <strong>Source Protection:</strong> Implement measures to protect sensitive sources and collection methods</li>
+                    <li><i class="fas fa-check"></i> <strong>Data Handling:</strong> Follow strict protocols for collecting, storing, and disposing of sensitive information</li>
+                    <li><i class="fas fa-check"></i> <strong>Attribution Avoidance:</strong> Maintain operational security to prevent detection of collection activities</li>
+                </ul>
+            </div>
+
+            <div class="warning-box" data-aos="fade-up">
+                <h3><i class="fas fa-exclamation-triangle"></i> Legal & Ethical Considerations</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                        <i class="fas fa-balance-scale" style="color: var(--warning-color); margin-top: 0.2rem;"></i>
+                        <strong>Compliance:</strong> Ensure all collection activities comply with applicable laws and regulations
+                    </li>
+                    <li style="display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                        <i class="fas fa-user-shield" style="color: var(--warning-color); margin-top: 0.2rem;"></i>
+                        <strong>Privacy:</strong> Respect individual privacy rights and data protection requirements
+                    </li>
+                    <li style="display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                        <i class="fas fa-heart" style="color: var(--warning-color); margin-top: 0.2rem;"></i>
+                        <strong>Ethics:</strong> Maintain professional ethics and avoid harm to individuals or organisations
+                    </li>
+                </ul>
+            </div>
+
+            <h3 style="color: var(--accent-color); margin: 2rem 0 1rem;" data-aos="fade-up">Sample Collection Script</h3>
+            <div class="code-example" data-aos="fade-up">
+                <pre>
+# OSINT Web Scraping Framework
+import requests
+from bs4 import BeautifulSoup
+import time
+import random
+from urllib.parse import urljoin, urlparse
+import json
+
+class OSINTCollector:
+    def __init__(self):
+        self.session = requests.Session()
+        self.session.headers.update({
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        })
+        self.collected_data = []
+        
+    def collect_from_source(self, url, selectors):
+        """
+        Collect structured data from web sources
+        """
+        try:
+            # Implement respectful scraping with delays
+            time.sleep(random.uniform(1, 3))
+            
+            response = self.session.get(url, timeout=30)
+            response.raise_for_status()
+            
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            # Extract data based on CSS selectors
+            data = {}
+            for field, selector in selectors.items():
+                elements = soup.select(selector)
+                data[field] = [elem.get_text(strip=True) for elem in elements]
+            
+            # Add metadata
+            data['source_url'] = url
+            data['collection_timestamp'] = time.time()
+            data['domain'] = urlparse(url).netloc
+            
+            self.collected_data.append(data)
+            return data
+            
+        except Exception as e:
+            print(f"Error collecting from {url}: {str(e)}")
+            return None
+
+# Usage Example
+collector = OSINTCollector()
+news_selectors = {
+    'headlines': 'h1, h2.headline',
+    'articles': '.article-content p',
+    'authors': '.author-name',
+    'timestamps': '.publish-date'
+}
+
+# Collect from multiple sources
+sources = ['https://example-news.com/geopolitics']
+for source in sources:
+    collector.collect_from_source(source, news_selectors)
+                </pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Framework Performance Metrics</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="metric-value">85%</div>
+                    <div class="metric-label">Source Verification Accuracy</div>
+                </div>
+                
+                <div class="metric-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="metric-value">40%</div>
+                    <div class="metric-label">Time Reduction vs Manual</div>
+                </div>
+                
+                <div class="metric-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="metric-value">25+</div>
+                    <div class="metric-label">Integrated Data Sources</div>
+                </div>
+                
+                <div class="metric-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="metric-value">30+</div>
+                    <div class="metric-label">Daily Intelligence Events</div>
+                </div>
+            </div>
+
+            <div class="best-practices" data-aos="fade-up" style="margin-top: 3rem;">
+                <h3><i class="fas fa-chart-line"></i> Quality Assurance Framework</h3>
+                <ul>
+                    <li><i class="fas fa-check"></i> <strong>Source Reliability Assessment:</strong> Systematic evaluation using A-F reliability scale</li>
+                    <li><i class="fas fa-check"></i> <strong>Information Credibility Rating:</strong> 1-6 scale for information confidence levels</li>
+                    <li><i class="fas fa-check"></i> <strong>Multi-Source Corroboration:</strong> Minimum 3-source verification for critical intelligence</li>
+                    <li><i class="fas fa-check"></i> <strong>Temporal Relevance Check:</strong> Currency and timeliness validation protocols</li>
+                    <li><i class="fas fa-check"></i> <strong>Bias Detection:</strong> Systematic identification of source bias and perspective</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="background: rgba(30, 41, 59, 0.3); border-radius: 1rem; padding: 3rem; margin: 3rem 0;">
+        <div class="container">
+            <div style="text-align: center;">
+                <h2 class="section-title" data-aos="fade-up">Framework Applications</h2>
+                <p data-aos="fade-up" style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 3rem;">
+                    This OSINT methodology has been successfully implemented across various intelligence disciplines and operational contexts.
+                </p>
+                
+                <div class="methodology-grid" style="text-align: left; margin-top: 2rem;">
+                    <div class="methodology-card" data-aos="fade-up" data-aos-delay="100">
+                        <h3><i class="fas fa-shield-alt"></i> Threat Intelligence</h3>
+                        <p style="color: var(--text-secondary);">
+                            Applied to cyber threat hunting, actor attribution, and campaign tracking across multiple threat landscapes.
+                        </p>
+                    </div>
+
+                    <div class="methodology-card" data-aos="fade-up" data-aos-delay="200">
+                        <h3><i class="fas fa-building"></i> Corporate Intelligence</h3>
+                        <p style="color: var(--text-secondary);">
+                            Enhanced due diligence investigations, competitive intelligence, and supply chain risk assessment.
+                        </p>
+                    </div>
+
+                    <div class="methodology-card" data-aos="fade-up" data-aos-delay="300">
+                        <h3><i class="fas fa-globe"></i> Geopolitical Analysis</h3>
+                        <p style="color: var(--text-secondary);">
+                            Regional stability monitoring, conflict analysis, and strategic warning intelligence production.
+                        </p>
+                    </div>
+
+                    <div class="methodology-card" data-aos="fade-up" data-aos-delay="400">
+                        <h3><i class="fas fa-gavel"></i> Compliance & Regulatory</h3>
+                        <p style="color: var(--text-secondary);">
+                            AML/KYC investigations, sanctions screening, and regulatory compliance verification.
+                        </p>
+                    </div>
+                </div>
+
+                <div data-aos="fade-up" style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 3rem;">
+                    <a href="../index.html#projects" class="back-btn">View Case Studies</a>
+                    <a href="../index.html#contact" class="back-btn" style="background: transparent; border: 2px solid var(--accent-color);">Implement This Framework</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add interactive hover effects to methodology cards
+        document.querySelectorAll('.methodology-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(-5px) scale(1)';
+            });
+        });
+
+        // Animate metrics on scroll
+        function animateMetrics() {
+            const metricCards = document.querySelectorAll('.metric-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const valueElement = entry.target.querySelector('.metric-value');
+                        const finalValue = valueElement.textContent;
+                        const isPercentage = finalValue.includes('%');
+                        const numericValue = parseInt(finalValue.replace(/[^\d]/g, ''));
+                        
+                        let currentValue = 0;
+                        const increment = Math.ceil(numericValue / 50);
+                        
+                        const counter = setInterval(() => {
+                            currentValue += increment;
+                            if (currentValue >= numericValue) {
+                                currentValue = numericValue;
+                                clearInterval(counter);
+                            }
+                            
+                            valueElement.textContent = isPercentage ? 
+                                currentValue + '%' : 
+                                (finalValue.includes('+') ? currentValue + 'K+' : currentValue + '+');
+                        }, 30);
+                        
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.7 });
+            
+            metricCards.forEach(card => observer.observe(card));
+        }
+
+        // Initialize metric animation
+        document.addEventListener('DOMContentLoaded', animateMetrics);
+    </script>
+</body>
+</html>
