@@ -87,7 +87,7 @@ LinkedIn: linkedin.com/in/cynthiaugwu
 
 GitHub: github.com/cynthiaugwu
 
-Location: London, UK (Remote Available)
+Location: Peterborough, UK (Remote Available and Open to relocation)
 
 **📄 License**
 This project is licensed under the MIT License.
