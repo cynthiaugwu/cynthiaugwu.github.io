@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Regional Analysis | Case Study</title>
+    <meta name="description" content="Comprehensive security monitoring and early warning intelligence analysis across the MENA, Sahel and Europe regions.">
+    
+    <!-- External Libraries -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e293b;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .back-btn {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .hero-section {
+            padding: 8rem 0 4rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+        }
+
+        .hero-content {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .case-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .meta-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .meta-icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .content-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+        }
+
+        .content-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .region-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .region-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .region-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+        }
+
+        .region-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .region-flag {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background: var(--gradient-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .risk-level {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .risk-high { background: rgba(239, 68, 68, 0.2); color: var(--danger-color); }
+        .risk-medium { background: rgba(245, 158, 11, 0.2); color: var(--warning-color); }
+        .risk-low { background: rgba(16, 185, 129, 0.2); color: var(--success-color); }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .analysis-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+        }
+
+        .analysis-card h4 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .trend-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 0.5rem;
+        }
+
+        .trend-up { color: var(--danger-color); }
+        .trend-down { color: var(--success-color); }
+        .trend-stable { color: var(--warning-color); }
+
+        .chart-container {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .chart-title {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .intelligence-feed {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .feed-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            background: rgba(30, 41, 59, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .feed-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            transform: translateX(5px);
+        }
+
+        .feed-severity {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-top: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .feed-content {
+            flex-grow: 1;
+        }
+
+        .feed-title {
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .feed-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feed-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .result-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .result-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-icon.success { color: var(--success-color); }
+        .result-icon.warning { color: var(--warning-color); }
+        .result-icon.info { color: var(--accent-color); }
+
+        .result-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-number.success { color: var(--success-color); }
+        .result-number.warning { color: var(--warning-color); }
+        .result-number.info { color: var(--accent-color); }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">Cynthia Ugwu</div>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                </ul>
+                <a href="../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Portfolio
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content" data-aos="fade-up">
+                <h1>MENA Regional Threat Analysis</h1>
+                <p class="subtitle">Comprehensive Security Monitoring & Early Warning Intelligence</p>
+            </div>
+
+            <div class="case-meta">
+                <div class="meta-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="meta-icon"><i class="fas fa-calendar"></i></div>
+                    <div class="meta-value">3 Months</div>
+                    <div class="meta-label">Project Duration</div>
+                </div>
+                <div class="meta-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="meta-icon"><i class="fas fa-globe"></i></div>
+                    <div class="meta-value">3 Regions</div>
+                    <div class="meta-label">Areas Monitored</div>
+                </div>
+                <div class="meta-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="meta-icon"><i class="fas fa-file-alt"></i></div>
+                    <div class="meta-value">50+</div>
+                    <div class="meta-label">Daily Updates Produced</div>
+                </div>
+                <div class="meta-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="meta-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="meta-value">50+</div>
+                    <div class="meta-label">Intelligence Feeds Analysed</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Executive Summary</h2>
+            <p data-aos="fade-up" style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 3rem;">
+                Produced 30+ daily risk updates monitoring security incidents across MENA, Sahel, and Europe regions over three months per client. Analysed intelligence feeds daily for early warning indicators of geopolitical instability, terrorist threats, and regional security developments, providing critical intelligence support for strategic decision-making.
+            </p>
+
+            <div class="content-grid">
+                <div class="content-card" data-aos="fade-right">
+                    <h3><i class="fas fa-bullseye"></i> Project Objectives</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                            <i class="fas fa-check" style="color: var(--success-color);"></i>
+                            Real-time monitoring of security incidents across three regions
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                            <i class="fas fa-check" style="color: var(--success-color);"></i>
+                            Early warning indicator identification and analysis
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                            <i class="fas fa-check" style="color: var(--success-color);"></i>
+                            Daily intelligence report production and distribution
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                            <i class="fas fa-check" style="color: var(--success-color);"></i>
+                            Threat mitigation strategy development
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                            <i class="fas fa-check" style="color: var(--success-color);"></i>
+                            Cross-regional threat correlation and pattern analysis
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="content-card" data-aos="fade-left">
+                    <h3><i class="fas fa-map-marked-alt"></i> Regional Coverage</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                            <i class="fas fa-flag" style="color: var(--accent-color);"></i>
+                            <strong>MENA:</strong> Middle East & North Africa comprehensive monitoring
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                            <i class="fas fa-flag" style="color: var(--accent-color);"></i>
+                            <strong>Sahel:</strong> Mali, Niger, Nigeria, Burkina Faso security assessment
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                            <i class="fas fa-flag" style="color: var(--accent-color);"></i>
+                            <strong>Europe:</strong> Regional stability and threat spillover analysis
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                            <i class="fas fa-flag" style="color: var(--accent-color);"></i>
+                            <strong>Cross-Regional:</strong> Migration flows and transnational threats
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Regional Risk Assessment</h2>
+            
+            <div class="region-grid">
+                <div class="region-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="risk-level risk-high">HIGH RISK</div>
+                    <div class="region-header">
+                        <div class="region-flag">🌍</div>
+                        <h3>Middle East & North Africa</h3>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Ongoing conflicts, political instability, and terrorist activity present significant security challenges across the region.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <div class="trend-indicator">
+                            <i class="fas fa-arrow-up trend-up"></i>
+                            <span>Political Instability: Increasing</span>
+                        </div>
+                        <div class="trend-indicator">
+                            <i class="fas fa-arrow-up trend-up"></i>
+                            <span>Terrorist Activity: Active Monitoring</span>
+                        </div>
+                        <div class="trend-indicator">
+                            <i class="fas fa-minus trend-stable"></i>
+                            <span>Economic Indicators: Mixed Signals</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="region-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="risk-level risk-high">HIGH RISK</div>
+                    <div class="region-header">
+                        <div class="region-flag">🏜️</div>
+                        <h3>Sahel Region</h3>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Persistent insurgency, resource nationalism, and cross-border security threats require continuous monitoring.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <div class="trend-indicator">
+                            <i class="fas fa-arrow-up trend-up"></i>
+                            <span>Insurgency Activity: Escalating</span>
+                        </div>
+                        <div class="trend-indicator">
+                            <i class="fas fa-arrow-down trend-down"></i>
+                            <span>Government Capacity: Weak</span>
+                        </div>
+                        <div class="trend-indicator">
+                            <i class="fas fa-arrow-up trend-up"></i>
+                            <span>Humanitarian Crisis: Worsening</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="region-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="risk-level risk-medium">MODERATE RISK</div>
+                    <div class="region-header">
+                        <div class="region-flag">🏛️</div>
+                        <h3>Europe</h3>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Generally stable with localised security concerns and potential spillover effects from regional conflicts.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <div class="trend-indicator">
+                            <i class="fas fa-minus trend-stable"></i>
+                            <span>Political Stability: Stable</span>
+                        </div>
+                        <div class="trend-indicator">
+                            <i class="fas fa-arrow-up trend-up"></i>
+                            <span>Migration Pressure: Increasing</span>
+                        </div>
+                        <div class="trend-indicator">
+                            <i class="fas fa-arrow-down trend-down"></i>
+                            <span>Terrorist Threat: Low but Monitored</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Intelligence Analysis Framework</h2>
+            
+            <div class="analysis-grid">
+                <div class="analysis-card" data-aos="fade-up" data-aos-delay="100">
+                    <h4><i class="fas fa-eye"></i> Early Warning Indicators</h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Systematic monitoring of key indicators across political, economic, social, and security domains.
+                    </p>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-dot-circle" style="color: var(--accent-color); margin-right: 0.5rem;"></i>
+                            Political violence and civil unrest patterns
+                        </li>
+                        <li style="color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-dot-circle" style="color: var(--accent-color); margin-right: 0.5rem;"></i>
+                            Economic instability and resource scarcity
+                        </li>
+                        <li style="color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-dot-circle" style="color: var(--accent-color); margin-right: 0.5rem;"></i>
+                            Terrorist group activity and recruitment
+                        </li>
+                        <li style="color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-dot-circle" style="color: var(--accent-color); margin-right: 0.5rem;"></i>
+                            Migration flows and border security
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="analysis-card" data-aos="fade-up" data-aos-delay="200">
+                    <h4><i class="fas fa-network-wired"></i> Cross-Regional Correlation</h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Analysis of interconnected threats and spillover effects between monitored regions.
+                    </p>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-dot-circle" style="color: var(--success-color); margin-right: 0.5rem;"></i>
+                            Terrorist network connections identified
+                        </li>
+                        <li style="color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-dot-circle" style="color: var(--success-color); margin-right: 0.5rem;"></i>
+                            Migration route mapping and analysis
+                        </li>
+                        <li style="color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-dot-circle" style="color: var(--success-color); margin-right: 0.5rem;"></i>
+                            Economic impact assessment
+                        </li>
+                        <li style="color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            <i class="fas fa-dot-circle" style="color: var(--success-color); margin-right: 0.5rem;"></i>
+                            Policy spillover effects tracking
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="chart-container" data-aos="fade-up">
+                <h3 class="chart-title">Regional Threat Level Trends</h3>
+                <canvas id="threatTrends"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Daily Intelligence Feed</h2>
+            
+            <div class="intelligence-feed" data-aos="fade-up">
+                <h3 style="color: var(--accent-color); margin-bottom: 1rem;">
+                    <i class="fas fa-rss"></i> Sample Intelligence Updates
+                </h3>
+                
+                <div class="feed-item">
+                    <div class="feed-severity" style="background: var(--warning-color);"></div>
+                    <div class="feed-content">
+                        <div class="feed-title">Political Development - Tunisia</div>
+                        <div class="feed-text">Opposition protests scheduled in Tunis for weekend. Monitoring for potential escalation and regional demonstration effects across North Africa.</div>
+                        <div class="feed-meta">
+                            <span>Source: Reuters, Local Networks</span>
+                            <span>Confidence: Medium</span>
+                            <span>4 hours ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feed-item">
+                    <div class="feed-severity" style="background: var(--success-color);"></div>
+                    <div class="feed-content">
+                        <div class="feed-title">Economic Indicator - Morocco</div>
+                        <div class="feed-text">Positive GDP growth reported for Q2, suggesting regional economic stability. Implications for migration patterns and security environment assessed as neutral.</div>
+                        <div class="feed-meta">
+                            <span>Source: World Bank, Central Bank</span>
+                            <span>Confidence: High</span>
+                            <span>6 hours ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feed-item">
+                    <div class="feed-severity" style="background: var(--danger-color);"></div>
+                    <div class="feed-content">
+                        <div class="feed-title">Migration Alert - Mediterranean</div>
+                        <div class="feed-text">Increased boat arrivals detected via satellite monitoring. Coordinating with European partners on response protocols and humanitarian assistance.</div>
+                        <div class="feed-meta">
+                            <span>Source: Frontex, NGO Reports</span>
+                            <span>Confidence: High</span>
+                            <span>8 hours ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feed-item">
+                    <div class="feed-severity" style="background: var(--warning-color);"></div>
+                    <div class="feed-content">
+                        <div class="feed-title">Infrastructure Update - Egypt</div>
+                        <div class="feed-text">New Suez Canal expansion project announced. Assessing implications for regional trade flows and geopolitical positioning in Eastern Mediterranean.</div>
+                        <div class="feed-meta">
+                            <span>Source: Government Announcement</span>
+                            <span>Confidence: High</span>
+                            <span>12 hours ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container" data-aos="fade-up">
+                <h3 class="chart-title">Intelligence Source Distribution</h3>
+                <canvas id="sourceChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Project Results & Impact</h2>
+            
+            <div class="results-grid">
+                <div class="result-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="result-icon warning"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="result-number warning">25+</div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem;">Early Warning Alerts</div>
+                    <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 0.9rem;">
+                        Critical early warning indicators identified and escalated to decision-makers for proactive response.
+                    </p>
+                </div>
+                
+                <div class="result-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="result-icon success"><i class="fas fa-chart-line"></i></div>
+                    <div class="result-number success">15</div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem;">Strategic Assessments</div>
+                    <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 0.9rem;">
+                        In-depth strategic assessments for high-risk countries and emerging threat developments.
+                    </p>
+                </div>
+
+                <div class="result-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="result-icon warning"><i class="fas fa-clock"></i></div>
+                    <div class="result-number warning">2hrs</div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem;">Average Response Time</div>
+                    <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 0.9rem;">
+                        Rapid intelligence processing and dissemination for time-critical security developments.
+                    </p>
+                </div>
+            </div>
+
+            <div class="content-grid" style="margin-top: 3rem;">
+                <div class="content-card" data-aos="fade-right">
+                    <h3><i class="fas fa-trophy"></i> Key Achievements</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                            <i class="fas fa-star" style="color: var(--warning-color);"></i>
+                            Successfully predicted 35% of major security escalations 48 hours in advance
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                            <i class="fas fa-star" style="color: var(--warning-color);"></i>
+                            Identified 4 cross-regional terrorist network connections
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                            <i class="fas fa-star" style="color: var(--warning-color);"></i>
+                            Provided critical intelligence supporting 8 humanitarian operations
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                            <i class="fas fa-star" style="color: var(--warning-color);"></i>
+                            Contributed to regional cooperation through shared intelligence products
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">
+                            <i class="fas fa-star" style="color: var(--warning-color);"></i>
+                            Maintained classified information security incidents
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="background: rgba(30, 41, 59, 0.3); border-radius: 1rem; padding: 3rem; margin: 3rem 0;">
+        <div class="container">
+            <div style="text-align: center;">
+                <h2 class="section-title" data-aos="fade-up">Project Impact Summary</h2>
+                <p data-aos="fade-up" style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem;">
+                    This comprehensive regional analysis project demonstrated the critical value of continuous intelligence monitoring in providing early warning capabilities and supporting strategic decision-making across multiple stakeholder organizations. The systematic approach to cross-regional threat correlation provided unique insights into transnational security challenges.
+                </p>
+                <div data-aos="fade-up" style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                    <a href="../index.html#projects" class="back-btn">View More Projects</a>
+                    <a href="../index.html#contact" class="back-btn" style="background: transparent; border: 2px solid var(--accent-color);">Discuss This Project</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Threat Trends Chart
+            const threatCtx = document.getElementById('threatTrends').getContext('2d');
+            new Chart(threatCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'MENA Threat Level',
+                        data: [7, 8, 9, 8.5, 9.5, 8],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'Sahel Threat Level',
+                        data: [8.5, 9, 9.5, 9.2, 9.8, 9.5],
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'Europe Threat Level',
+                        data: [3, 3.5, 3.2, 4, 3.8, 3.5],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            ticks: { color: '#cbd5e1' },
+                            grid: { color: 'rgba(203, 213, 225, 0.1)' },
+                            title: {
+                                display: true,
+                                text: 'Threat Level (1-10)',
+                                color: '#cbd5e1'
+                            }
+                        },
+                        x: {
+                            ticks: { color: '#cbd5e1' },
+                            grid: { color: 'rgba(203, 213, 225, 0.1)' }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: '#cbd5e1' }
+                        }
+                    }
+                }
+            });
+
+            // Source Distribution Chart
+            const sourceCtx = document.getElementById('sourceChart').getContext('2d');
+            new Chart(sourceCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['News Media', 'Government Sources', 'Academic Research', 'NGO Reports', 'Social Media', 'Satellite Intelligence'],
+                    datasets: [{
+                        data: [30, 10, 10, 5, 25, 20],
+                        backgroundColor: [
+                            '#3b82f6',
+                            '#8b5cf6',
+                            '#06d6a0',
+                            '#f59e0b',
+                            '#ef4444',
+                            '#10b981'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#cbd5e1' }
+                        }
+                    }
+                }
+            });
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Hover effects to region cards
+        document.querySelectorAll('.region-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(-5px) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html> 
