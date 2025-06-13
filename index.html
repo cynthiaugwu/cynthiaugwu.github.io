@@ -182,7 +182,7 @@
         }
 
         .hero-content h1 {
-            font-size: 3.5rem;
+            font-size: 4.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
             background: var(--gradient-primary);
@@ -293,6 +293,39 @@
             height: 100%;
             border-radius: 1rem;
         }
+
+        /* Mobile Menu - Make Sure This Exists */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none !important; /* Force hide desktop menu */
+    }
+
+    .mobile-menu-btn {
+        display: block !important; /* Force show hamburger */
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+
+    .mobile-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(10, 14, 26, 0.98);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(79, 172, 254, 0.1);
+        padding: 1rem 0;
+    }
+
+    .mobile-menu.active {
+        display: block !important;
+    }
+}
 
         /* Sections */
         .section {
