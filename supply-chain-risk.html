@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supply Chain Risk Assessment | Case Study</title>
+    <meta name="description" content="Comprehensive case study on automated supply chain intelligence and third-party risk assessment methodology.">
+    
+    <!-- External Libraries -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e293b;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .back-btn {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .hero-section {
+            padding: 8rem 0 4rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+        }
+
+        .hero-content {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .case-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .meta-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .meta-icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .content-section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .content-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+        }
+
+        .content-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .challenge-item {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid var(--danger-color);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .solution-item {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success-color);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .methodology-section {
+            background: rgba(30, 41, 59, 0.3);
+            border-radius: 1rem;
+            padding: 3rem;
+            margin: 3rem 0;
+        }
+
+        .methodology-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .step-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 1rem;
+            padding: 2rem;
+            position: relative;
+            text-align: center;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-color);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .step-card h4 {
+            margin: 1rem 0;
+            color: var(--accent-color);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .result-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .result-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-icon.success { color: var(--success-color); }
+        .result-icon.warning { color: var(--warning-color); }
+        .result-icon.info { color: var(--accent-color); }
+
+        .result-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-number.success { color: var(--success-color); }
+        .result-number.warning { color: var(--warning-color); }
+        .result-number.info { color: var(--accent-color); }
+
+        .chart-container {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .chart-title {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .tech-tag {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-color);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .code-block {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            color: var(--text-secondary);
+            font-family: 'Courier New', monospace;
+            margin: 0;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 2rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-left: 4rem;
+            margin-bottom: 2rem;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3.5rem;
+            top: 1.5rem;
+            width: 1rem;
+            height: 1rem;
+            background: var(--accent-color);
+            border-radius: 50%;
+            border: 3px solid var(--primary-color);
+        }
+
+        .timeline-date {
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .methodology-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">Cynthia Ugwu</div>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../index.html#projects">Projects</a></li>
+                    <li><a href="../index.html#contact">Contact</a></li>
+                </ul>
+                <a href="../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Portfolio
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content" data-aos="fade-up">
+                <h1>Automated Supply Chain Risk Assessment</h1>
+                <p class="subtitle">Advanced OSINT Intelligence Collection & Third-Party Risk Mitigation</p>
+            </div>
+
+            <div class="case-meta">
+                <div class="meta-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="meta-icon"><i class="fas fa-calendar"></i></div>
+                    <div class="meta-value">4 Weeks</div>
+                    <div class="meta-label">Project Duration</div>
+                </div>
+                <div class="meta-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="meta-icon"><i class="fas fa-users"></i></div>
+                    <div class="meta-value">8</div>
+                    <div class="meta-label">Organisations Served</div>
+                </div>
+                <div class="meta-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="meta-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="meta-value">40%</div>
+                    <div class="meta-label">Time Reduction</div>
+                </div>
+                <div class="meta-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="meta-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="meta-value">35%</div>
+                    <div class="meta-label">Risk Reduction</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Executive Summary</h2>
+            <p data-aos="fade-up" style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 3rem;">
+                Developed and implemented a comprehensive automated OSINT collection system for supply chain intelligence, enabling rapid identification and assessment of third-party vulnerabilities across critical infrastructure sectors. The solution improved accuracy of supplier risk mapping from second to fourth-tier relationships.
+            </p>
+
+            <div class="content-grid">
+                <div class="content-card" data-aos="fade-right">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Key Challenges</h3>
+                    <div class="challenge-item">
+                        <strong>Manual Assessment Bottlenecks</strong><br>
+                        Traditional supply chain risk assessments required 80+ hours per comprehensive evaluation, creating significant delays in client decision-making processes.
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Limited Visibility Beyond Tier-1</strong><br>
+                        Existing methodologies only provided surface-level analysis of direct suppliers, missing critical vulnerabilities in extended supply networks.
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Data Fragmentation</strong><br>
+                        Intelligence sources scattered across multiple platforms, databases, and open-source repositories without centralised analysis framework.
+                    </div>
+                    <div class="challenge-item">
+                        <strong>Real-time Monitoring Gaps</strong><br>
+                        Static assessments failed to capture dynamic risk changes in rapidly evolving geopolitical and economic landscapes.
+                    </div>
+                </div>
+
+                <div class="content-card" data-aos="fade-left">
+                    <h3><i class="fas fa-lightbulb"></i> Strategic Solutions</h3>
+                    <div class="solution-item">
+                        <strong>Automated Collection Framework</strong><br>
+                        Implemented R and SQL-based automation reducing manual collection time from 40 hours to 24 hours per assessment cycle.
+                    </div>
+                    <div class="solution-item">
+                        <strong>Multi-Tier Network Mapping</strong><br>
+                        Developed algorithms to trace and analyse supplier relationships up to fourth-tier dependencies with 65% accuracy rate.
+                    </div>
+                    <div class="solution-item">
+                        <strong>Integrated Intelligence Platform</strong><br>
+                        Created centralised dashboard aggregating 25+ OSINT sources with real-time data fusion and correlation analysis.
+                    </div>
+                    <div class="solution-item">
+                        <strong>Dynamic Risk Scoring</strong><br>
+                        Built learning models for continuous risk assessment with automated alert systems for threshold breaches.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="methodology-section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Methodology Framework</h2>
+            <p data-aos="fade-up" style="color: var(--text-secondary); margin-bottom: 2rem;">
+                Comprehensive six-phase approach combining traditional intelligence analysis with advanced automation techniques.
+            </p>
+
+            <div class="methodology-steps">
+                <div class="step-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="step-number">1</div>
+                    <h4>Intelligence Requirements</h4>
+                    <p>Define client-specific intelligence needs, risk tolerance levels, and critical infrastructure dependencies. Establish baseline threat models and vulnerability parameters.</p>
+                </div>
+                <div class="step-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-number">2</div>
+                    <h4>Data Collection</h4>
+                    <p>Deploy automated OSINT collection tools across 15+ sources including corporate databases, regulatory filings, news feeds, and social media monitoring.</p>
+                </div>
+                <div class="step-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="step-number">3</div>
+                    <h4>Network Analysis</h4>
+                    <p>Apply graph theory algorithms to map supplier relationships, identify critical nodes, and trace dependency chains through multiple tiers.</p>
+                </div>
+                <div class="step-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="step-number">4</div>
+                    <h4>Risk Assessment</h4>
+                    <p>Integrate geopolitical, operational, financial, and reputational risk factors using weighted scoring models and machine learning algorithms.</p>
+                </div>
+                <div class="step-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="step-number">5</div>
+                    <h4>Validation & Analysis</h4>
+                    <p>Cross-reference findings with human intelligence sources, conduct targeted investigations on high-risk entities, and validate automated assessments.</p>
+                </div>
+                <div class="step-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="step-number">6</div>
+                    <h4>Reporting & Monitoring</h4>
+                    <p>Generate actionable intelligence reports with risk mitigation recommendations and establish continuous monitoring protocols for dynamic updates.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="content-section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Technical Implementation</h2>
+            
+            <div class="tech-stack">
+                <span class="tech-tag">R Programming</span>
+                <span class="tech-tag">SQL Databases</span>
+                <span class="tech-tag">Python (Web Scraping)</span>
+                <span class="tech-tag">Power BI</span>
+                <span class="tech-tag">Advanced Search Operators</span>
+            </div>
+
+            <div class="content-card" data-aos="fade-up">
+                <h3><i class="fas fa-code"></i> Core Automation Script (R)</h3>
+                <div class="code-block">
+                    <pre>
+# Supply Chain Intelligence Collection Framework
+library(httr)
+library(jsonlite)
+library(dplyr)
+library(igraph)
+
+# Initialize data collection parameters
+initialize_collection <- function(client_config) {
+  sources <- list(
+    corporate_db = client_config$corporate_sources,
+    regulatory = client_config$regulatory_feeds,
+    news_feeds = client_config$news_sources,
+    social_intel = client_config$social_sources
+  )
+  
+  # Set collection intervals and thresholds
+  collection_params <- list(
+    update_frequency = "hourly",
+    risk_threshold = client_config$risk_tolerance,
+    network_depth = 4  # Fourth-tier supplier analysis
+  )
+  
+  return(list(sources = sources, params = collection_params))
+}
+
+# Automated supplier network mapping
+map_supplier_network <- function(primary_entity, depth = 4) {
+  network_graph <- graph.empty()
+  
+  for(tier in 1:depth) {
+    # Collect supplier relationships for current tier
+    tier_suppliers <- collect_supplier_data(primary_entity, tier)
+    
+    # Add nodes and edges to network graph
+    network_graph <- add_suppliers_to_graph(network_graph, tier_suppliers)
+    
+    # Calculate centrality metrics for risk prioritisation
+    centrality_scores <- calculate_network_centrality(network_graph)
+  }
+  
+  return(network_graph)
+}
+
+# Risk scoring algorithm
+calculate_risk_score <- function(entity_data) {
+  risk_factors <- list(
+    geopolitical = assess_geopolitical_risk(entity_data$location),
+    financial = assess_financial_stability(entity_data$financials),
+    operational = assess_operational_risk(entity_data$operations),
+    reputational = assess_reputational_risk(entity_data$news_sentiment)
+  )
+  
+  # Weighted risk calculation
+  weighted_score <- sum(
+    risk_factors$geopolitical * 0.3,
+    risk_factors$financial * 0.25,
+    risk_factors$operational * 0.25,
+    risk_factors$reputational * 0.2
+  )
+  
+  return(weighted_score)
+}
+                    </pre>
+                </div>
+            </div>
+
+            <div class="chart-container" data-aos="fade-up">
+                <h3 class="chart-title">Assessment Timeline Comparison</h3>
+                <canvas id="timelineChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Project Timeline & Milestones</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item" data-aos="fade-up">
+                    <div class="timeline-date">Week 1: Requirements & Planning</div>
+                    <h4>Stakeholder Alignment & Framework Design</h4>
+                    <p>Conducted comprehensive client needs assessment to define intelligence requirements, establish risk tolerance parameters, and design modular collection framework architecture.</p>
+                </div>
+                
+                <div class="timeline-item" data-aos="fade-up">
+                    <div class="timeline-date">Week 2: Infrastructure Development</div>
+                    <h4>Technical Platform Construction</h4>
+                    <p>Built automated collection infrastructure using R and SQL. Integrated 25+ OSINT sources including D&B, Reuters, Bloomberg, and regulatory databases (only those with open source access). Established data pipeline for real-time processing.</p>
+                </div>
+                
+                <div class="timeline-item" data-aos="fade-up">
+                    <div class="timeline-date">Week 3: Algorithm Development</div>
+                    <h4>Risk Assessment Models & Network Analysis</h4>
+                    <p>Developed machine learning algorithms for supplier network mapping and risk scoring. Implemented graph theory analysis for multi-tier dependency identification. Created weighted risk models incorporating geopolitical, financial, and operational factors.</p>
+                </div>
+                
+                <div class="timeline-item" data-aos="fade-up">
+                    <div class="timeline-date">Week 4: Full Deployment</div>
+                    <h4>Production Launch & Training</h4>
+                    <p>Rolled out complete system to the organisation. Provided comprehensive training on dashboard utilisation and alert interpretation. Established 24/7 monitoring protocols for critical supply chains.</p>
+                </div>
+                
+                <div class="timeline-item" data-aos="fade-up">
+                    <div class="timeline-date">Follow-up: Performance Analysis</div>
+                    <h4>Optimisation & Feedback</h4>
+                    <p>Conducted comprehensive performance evaluation demonstrating 40% time reduction and 35% improvement in risk identification. Implemented client feedback enhancements and established continuous improvement protocols.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Results & Impact</h2>
+            
+            <div class="results-grid">
+                <div class="result-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="result-icon success"><i class="fas fa-clock"></i></div>
+                    <div class="result-number success">40%</div>
+                    <div class="meta-label">Assessment Time Reduction</div>
+                    <p>Reduced comprehensive supply chain assessment time from 80 hours to 48 hours per evaluation cycle.</p>
+                </div>
+                
+                <div class="result-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="result-icon info"><i class="fas fa-network-wired"></i></div>
+                    <div class="result-number info">40+</div>
+                    <div class="meta-label">Supplier Entities Mapped</div>
+                    <p>Successfully mapped and analysed supplier networks across four tiers.</p>
+                </div>
+                
+                <div class="result-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="result-icon warning"><i class="fas fa-shield-alt"></i></div>
+                    <div class="result-number warning">37</div>
+                    <div class="meta-label">High-Risk Entities Identified</div>
+                    <p>Discovered previously unknown high-risk suppliers in third and fourth-tier relationships.</p>
+                </div>
+                
+                <div class="result-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="result-icon success"><i class="fas fa-chart-line"></i></div>
+                    <div class="result-number success">35%</div>
+                    <div class="meta-label">Risk Exposure Reduction</div>
+                    <p>Clients achieved significant risk reduction through proactive mitigation strategies and supplier diversification.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section" style="background: rgba(30, 41, 59, 0.3); border-radius: 1rem; padding: 3rem; margin: 3rem 0;">
+        <div class="container">
+            <div style="text-align: center;">
+                <h2 class="section-title" data-aos="fade-up">Project Impact Summary</h2>
+                <p data-aos="fade-up" style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem;">
+                    This comprehensive supply chain intelligence initiative demonstrated the transformative potential of combining advanced automation with strategic intelligence analysis. The project achieved significant operational improvements for third-party risk assessment in critical infrastructure sectors.
+                </p>
+                <div data-aos="fade-up" style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                    <a href="../index.html#projects" class="back-btn">View More Projects</a>
+                    <a href="../index.html#contact" class="back-btn" style="background: transparent; border: 2px solid var(--accent-color);">Discuss This Project</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Timeline Comparison Chart
+            const timelineCtx = document.getElementById('timelineChart').getContext('2d');
+            new Chart(timelineCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Initial Assessment', 'Data Collection', 'Analysis', 'Report Generation', 'Client Review'],
+                    datasets: [{
+                        label: 'Manual Process (Hours)',
+                        data: [8, 24, 32, 12, 4],
+                        backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                        borderColor: '#ef4444',
+                        borderWidth: 1
+                    }, {
+                        label: 'Automated Process (Hours)',
+                        data: [4, 8, 16, 4, 2],
+                        backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                        borderColor: '#10b981',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#cbd5e1' },
+                            grid: { color: 'rgba(203, 213, 225, 0.1)' }
+                        },
+                        x: {
+                            ticks: { color: '#cbd5e1' },
+                            grid: { color: 'rgba(203, 213, 225, 0.1)' }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: '#cbd5e1' }
+                        }
+                    }
+                }
+            });
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
