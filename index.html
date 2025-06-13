@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strategic Intelligence Analyst | Portfolio</title>
     <meta name="description" content="Strategic Intelligence Analyst with 4+ years experience in geopolitical risk assessment,due diligence, compliance, OSINT investigations, and threat intelligence.">
+
+     <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' font-weight='bold' fill='%234facfe'>C</text></svg>">
     
     <!-- External Libraries -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -43,16 +46,17 @@
             overflow-x: hidden;
         }
 
-        /* Navigation */
-        .navbar {
+       /* Header with Mobile Menu */
+        .header {
             position: fixed;
             top: 0;
-            width: 100%;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            left: 0;
+            right: 0;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(79, 172, 254, 0.1);
             z-index: 1000;
-            transition: all 0.3s ease;
+            padding: 1rem 0;
         }
 
         .nav-container {
@@ -105,12 +109,64 @@
             width: 100%;
         }
 
+         /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(10, 14, 26, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(79, 172, 254, 0.1);
+            padding: 1rem 0;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            padding: 0 2rem;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: block;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-nav-links a:hover {
+            color: var(--accent-color);
+        }
+
         /* Hero Section */
         .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
+            justify-content: center;
             position: relative;
+            padding: 140px 2rem 80px;
             overflow: hidden;
         }
 
@@ -122,6 +178,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 4rem;
             align-items: center;
+            width: 100%;
         }
 
         .hero-content h1 {
@@ -1062,17 +1119,22 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="social-links">
-                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="social-link"><i class="fas fa-envelope"></i></a>
-            </div>
-            <p style="color: var(--text-muted);">&copy; Cynthia Ugwu 2025 Strategic Intelligence Analyst Portfolio.</p>
+<footer class="footer">
+    <div class="container">
+        <div class="social-links">
+            <a href="https://linkedin.com/in/your-actual-profile" class="social-link" target="_blank" rel="noopener">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://github.com/your-actual-username" class="social-link" target="_blank" rel="noopener">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="mailto:your.email@domain.com" class="social-link">
+                <i class="fas fa-envelope"></i>
+            </a>
         </div>
-    </footer>
+        <p>&copy; 2024 Cynthia Ugwu. Strategic Intelligence Analyst. All rights reserved.</p>
+    </div>
+</footer>
 
     <script>
         // Initialize AOS (Animate On Scroll)
