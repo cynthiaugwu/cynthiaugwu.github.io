@@ -44,7 +44,7 @@ Hero Dashboard: Executive summary with key metrics
 
 Experience Timeline: Career progression with detailed achievements
 
-Case Studies: 4 comprehensive project showcases
+Case Studies: 3 comprehensive project showcases
 
 Methodology: Detailed OSINT frameworks
 
