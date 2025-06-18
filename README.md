@@ -74,7 +74,7 @@ Professional Standards: Adherence to intelligence community best practices
 
 **🤝 Contact & Networking**
 
-Email: chelleolive0@gmail.com
+Email: cynthiaugwu13@gmail.com
 
 LinkedIn: linkedin.com/in/cynthiaugwu
 
