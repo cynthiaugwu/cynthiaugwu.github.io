@@ -1,8 +1,8 @@
-Strategic Intelligence Analyst Portfolio
+Intelligence & Due Diligence Analyst Portfolio
 
 📊 Overview
 
-Professional portfolio showcasing 4+ years of experience in strategic intelligence analysis, geopolitical risk assessment, and threat intelligence. This interactive website demonstrates expertise in OSINT investigations, compliance frameworks, and automated intelligence collection across MENA, Sahel, and European regions.
+Professional portfolio showcasing 4+ years of experience in due diligence, geopolitical risk assessment, and threat intelligence. This interactive website demonstrates expertise in OSINT investigations, enhanced due diligence, and advanced intelligence collection across MENA, Sahel, and European regions.
 
 🛠️ Technical Stack
 
@@ -58,8 +58,6 @@ Contact Integration: Professional networking and communication
 
 35% Average risk reduction achieved for clients
 
-Zero Incidents of classified information security breaches
-
 📝 Content Guidelines
 
 All case studies follow these principles:
@@ -80,7 +78,7 @@ LinkedIn: linkedin.com/in/cynthiaugwu
 
 GitHub: github.com/cynthiaugwu
 
-Location: Peterborough, UK (Remote Available and Open to relocation)
+Location: London, UK
 
 **📄 License**
 This project is licensed under the MIT License.
