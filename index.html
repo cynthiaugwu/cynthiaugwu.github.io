@@ -1427,7 +1427,7 @@
             renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
             renderer.setClearColor(0x000000, 0);
 
-            // Create network visualization
+            // Create network visualisation
             const geometry = new THREE.SphereGeometry(0.1, 8, 8);
             const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
             const nodes = [];
@@ -1533,9 +1533,11 @@
         }
 
         // Initialize everything when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            initHeroCanvas();
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        initHeroCanvas();
+    }, 500);
+});
 
         // Typing effect to hero subtitle
         function typeWriter(element, text, speed = 100) {
