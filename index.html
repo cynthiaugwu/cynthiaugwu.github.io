@@ -1405,7 +1405,6 @@
                 bar.style.width = width + '%';
             });
         }
-
         const skillObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1414,8 +1413,11 @@
                 }
             });
         }, observerOptions);
-
-        skillObserver.observe(document.querySelector('.skills-grid'));
+        
+        const skillsGridElement = document.querySelector('.skills-grid-three');
+        if (skillsGridElement) {
+            skillObserver.observe(skillsGridElement);
+        }
 
         // Three.js Hero Animation
         function initHeroCanvas() {
