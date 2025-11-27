@@ -18,23 +18,6 @@ Forms: Formspree integration for contact functionality
 
 Deployment: GitHub Pages with custom domain support
 
-📁 Repository Structure
-├── index.html                     # Main portfolio homepage
-├── case-studies/
-│   ├── supply-chain-risk.html     # Supply chain automation project
-│   ├── threat-dashboard.html      # Real-time intelligence platform
-│   ├── regional-analysis.html     # MENA/Sahel security analysis
-
-├── methodology/
-│   └── osint-framework.html       # Technical methodology showcase
-
-├── assets/
-│   ├── images/                    # Professional photos & screenshots
-│   ├── data/
-│   │   └── projects.json          # Structured project data
-│   └── docs/                      # CV and certifications
-└── README.md                      # This documentation
-
 🚀 Live Demo
 Visit the live portfolio: https://cynthiaugwu.github.io
 
