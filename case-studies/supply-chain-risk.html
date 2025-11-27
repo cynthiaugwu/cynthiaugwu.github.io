@@ -556,12 +556,13 @@
                 <div class="code-block">
                     <pre>
 # Supply Chain Intelligence Collection Framework
+                        
 library(httr)
 library(jsonlite)
 library(dplyr)
 library(igraph)
 
-# Initialize data collection parameters
+# Initialise data collection parameters
 initialize_collection <- function(client_config) {
   sources <- list(
     corporate_db = client_config$corporate_sources,
@@ -572,9 +573,11 @@ initialize_collection <- function(client_config) {
   
   # Set collection intervals and thresholds
   collection_params <- list(
-    update_frequency = "hourly",
+    update_frequency = 3600,  # seconds
     risk_threshold = client_config$risk_tolerance,
-    network_depth = 4  # Fourth-tier supplier analysis
+    network_depth = 4,  # Fourth-tier supplier analysis
+    stale_data_limit = 86400,  # flag data older than 24hrs
+    min_confidence = 0.65
   )
   
   return(list(sources = sources, params = collection_params))
@@ -582,24 +585,56 @@ initialize_collection <- function(client_config) {
 
 # Automated supplier network mapping
 map_supplier_network <- function(primary_entity, depth = 4) {
-  network_graph <- graph.empty()
+  network_graph <- graph.empty(directed = TRUE)
+  visited <- character(0)
   
-  for(tier in 1:depth) {
+  # BFS traversal with cycle prevention
+  queue <- list(list(entity = primary_entity, tier = 0))
+  
+  while (length(queue) > 0 && queue[[1]]$tier < depth) {
+    current <- queue[[1]]
+    queue <- queue[-1]
+    
+    # Skip if already processed (prevents infinite loops)
+    if (current$entity %in% visited) next
+    visited <- c(visited, current$entity)
+    
     # Collect supplier relationships for current tier
-    tier_suppliers <- collect_supplier_data(primary_entity, tier)
+    tier_suppliers <- collect_supplier_data(current$entity, current$tier)
     
     # Add nodes and edges to network graph
-    network_graph <- add_suppliers_to_graph(network_graph, tier_suppliers)
-    
-    # Calculate centrality metrics for risk prioritisation
-    centrality_scores <- calculate_network_centrality(network_graph)
+    if (nrow(tier_suppliers) > 0) {
+      for (i in 1:nrow(tier_suppliers)) {
+        network_graph <- add_edges(
+          network_graph,
+          c(current$entity, tier_suppliers$supplier_id[i]),
+          weight = tier_suppliers$relationship_strength[i]
+        )
+        
+        # Queue for next tier
+        if (current$tier + 1 < depth) {
+          queue <- append(queue, list(list(
+            entity = tier_suppliers$supplier_id[i],
+            tier = current$tier + 1
+          )))
+        }
+      }
+    }
   }
+  
+  # Calculate centrality metrics for risk prioritisation
+  V(network_graph)$betweenness <- betweenness(network_graph, normalized = TRUE)
+  V(network_graph)$eigen_central <- eigen_centrality(network_graph)$vector
+  
+  # Identify single points of failure (articulation points)
+  critical_nodes <- articulation_points(network_graph)
+  V(network_graph)$is_critical <- V(network_graph) %in% critical_nodes
   
   return(network_graph)
 }
 
 # Risk scoring algorithm
-calculate_risk_score <- function(entity_data) {
+calculate_risk_score <- function(entity_data, network_context = NULL) {
   risk_factors <- list(
     geopolitical = assess_geopolitical_risk(entity_data$location),
     financial = assess_financial_stability(entity_data$financials),
@@ -607,15 +642,29 @@ calculate_risk_score <- function(entity_data) {
     reputational = assess_reputational_risk(entity_data$news_sentiment)
   )
   
-  # Weighted risk calculation
-  weighted_score <- sum(
-    risk_factors$geopolitical * 0.3,
+  # Weighted risk calculation with empirically-derived coefficients
+  base_score <- sum(
+    risk_factors$geopolitical * 0.30,
     risk_factors$financial * 0.25,
     risk_factors$operational * 0.25,
-    risk_factors$reputational * 0.2
+    risk_factors$reputational * 0.20
   )
   
-  return(weighted_score)
+  # Network position amplifies risk (high centrality = higher impact if disrupted)
+  network_multiplier <- 1.0
+  if (!is.null(network_context)) {
+    if (network_context$betweenness > 0.7) network_multiplier <- 1.25
+    if (network_context$is_critical) network_multiplier <- network_multiplier * 1.15
+  }
+  
+  adjusted_score <- min(1.0, base_score * network_multiplier)
+  
+  return(list(
+    risk_score = adjusted_score,
+    component_scores = risk_factors,
+    network_amplification = network_multiplier,
+    timestamp = Sys.time()
+  ))
 }
                     </pre>
                 </div>
